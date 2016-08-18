@@ -1,7 +1,9 @@
 package xyz.jimbray.gankgank.api;
 
 import rx.Subscriber;
+import xyz.jimbray.gankgank.data.DataBean;
 import xyz.jimbray.gankgank.data.HistoryBean;
+import xyz.jimbray.gankgank.data.HomePageBean;
 
 /**
  * Created by Jimbray  .
@@ -27,6 +29,14 @@ public class GankAPIManager {
 
     public void getHistoryData(int count, int page, Subscriber<HistoryBean> subscribers) {
         GankAPI.getInstance().getHistoryData(count, page, subscribers);
+    }
+
+    public void getFuli(Subscriber<DataBean> subscriber) {
+        GankAPI.getInstance().getData("福利", 5, 1, subscriber);
+    }
+
+    public void getHomeData(Subscriber<HomePageBean> subscriber) {
+
     }
 
 }

@@ -13,6 +13,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import xyz.jimbray.gankgank.common.Constants;
+import xyz.jimbray.gankgank.data.DataBean;
 import xyz.jimbray.gankgank.data.HistoryBean;
 
 /**
@@ -73,10 +74,20 @@ public class GankAPI {
 
         @GET("history/content/{count}/{page}")
         Observable<HistoryBean> getHistoryData(@Path("count") int cont, @Path("page") int page);
+
+        @GET("data/{type}/{count}/{page}")
+        Observable<DataBean> getData(@Path("type") String type, @Path("count") int count, @Path("page") int page);
     }
 
     public void getHistoryData(int count, int page, Subscriber<HistoryBean> subscriber) {
         getGank().getHistoryData(count, page)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+    public void getData(String type, int count, int page, Subscriber<DataBean> subscriber) {
+        getGank().getData(type, count, page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
