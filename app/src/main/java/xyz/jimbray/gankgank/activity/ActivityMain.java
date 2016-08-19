@@ -11,8 +11,10 @@ import java.util.List;
 import rx.Subscriber;
 import xyz.jimbray.gankgank.R;
 import xyz.jimbray.gankgank.api.GankAPIManager;
-import xyz.jimbray.gankgank.data.HistoryBean;
+import xyz.jimbray.gankgank.common.Utils;
+import xyz.jimbray.gankgank.data.DataBean;
 import xyz.jimbray.gankgank.fragments.FragmentHomePage;
+import xyz.jimbray.gankgank.view.ZoomoutPageTransformer;
 
 /**
  * Created by Jimbray  .
@@ -43,10 +45,13 @@ public class ActivityMain extends ActivityBase {
 
         mAdapter = new PagerAdapter(getSupportFragmentManager());
         viewpager.setAdapter(mAdapter);
+        viewpager.setOffscreenPageLimit(5);//setOffscreenPageLimit表示设置缓存，这样左右拖动即可看见后面的Fragment
+        viewpager.setPageMargin(Utils.dpToPx(15));
+        viewpager.setPageTransformer(true, new ZoomoutPageTransformer());
     }
 
     private void getHistoryData() {
-        GankAPIManager.getInstance().getHistoryData(5, 1, new Subscriber<HistoryBean>() {
+        GankAPIManager.getInstance().getFuli(new Subscriber<DataBean>() {
             @Override
             public void onCompleted() {
 
@@ -58,15 +63,15 @@ public class ActivityMain extends ActivityBase {
             }
 
             @Override
-            public void onNext(HistoryBean historyBean) {
-                mAdapter.setData(historyBean);
+            public void onNext(DataBean dataBean) {
+                mAdapter.setData(dataBean);
             }
         });
     }
 
     private class PagerAdapter extends FragmentStatePagerAdapter {
 
-        private List<HistoryBean.History> history_list;
+        private List<DataBean.Data> data_list;
 
         public PagerAdapter(FragmentManager fm) {
             super(fm);
@@ -74,17 +79,17 @@ public class ActivityMain extends ActivityBase {
 
         @Override
         public Fragment getItem(int position) {
-            return history_list == null ? null : FragmentHomePage.newInstance(history_list.get(position));
+            return data_list == null ? null : FragmentHomePage.newInstance(data_list.get(position));
         }
 
         @Override
         public int getCount() {
-            return history_list == null ? 0 : history_list.size();
+            return data_list == null ? 0 : data_list.size();
         }
 
-        public void setData(HistoryBean history) {
-            if(history != null) {
-                this.history_list = history.getHistoryList();
+        public void setData(DataBean dataBean) {
+            if(dataBean != null) {
+                this.data_list = dataBean.getData();
                 notifyDataSetChanged();
             }
         }

@@ -63,7 +63,7 @@ public class GankAPI {
         return mRetrofit;
     }
 
-    private Gank getGank() {
+    public Gank getGank() {
         if(mGank == null) {
             mGank = getRetrofit().create(Gank.class);
         }

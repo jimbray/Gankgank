@@ -1,5 +1,8 @@
 package xyz.jimbray.gankgank.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
@@ -27,7 +30,7 @@ public class DataBean {
         return this.results;
     }
 
-    public class Data {
+    public static class Data implements Parcelable {
         private String _id;
 
         private String createdAt;
@@ -45,6 +48,48 @@ public class DataBean {
         private boolean used;
 
         private String who;
+
+        protected Data(Parcel in) {
+            _id = in.readString();
+            createdAt = in.readString();
+            desc = in.readString();
+            publishedAt = in.readString();
+            source = in.readString();
+            type = in.readString();
+            url = in.readString();
+            used = in.readByte() != 0;
+            who = in.readString();
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(_id);
+            dest.writeString(createdAt);
+            dest.writeString(desc);
+            dest.writeString(publishedAt);
+            dest.writeString(source);
+            dest.writeString(type);
+            dest.writeString(url);
+            dest.writeByte((byte) (used ? 1 : 0));
+            dest.writeString(who);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static final Creator<Data> CREATOR = new Creator<Data>() {
+            @Override
+            public Data createFromParcel(Parcel in) {
+                return new Data(in);
+            }
+
+            @Override
+            public Data[] newArray(int size) {
+                return new Data[size];
+            }
+        };
 
         public void set_id(String _id){
             this._id = _id;

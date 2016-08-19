@@ -9,4 +9,6 @@ package xyz.jimbray.gankgank.common;
 public class Constants {
 
     public static final String BASE_URL = "http://gank.io/api/";
+
+    public static final String TAG = "jimbray";
 }

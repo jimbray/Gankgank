@@ -6,10 +6,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import xyz.jimbray.gankgank.R;
-import xyz.jimbray.gankgank.data.HistoryBean;
+import xyz.jimbray.gankgank.data.DataBean;
 
 /**
  * Created by Jimbray  .
@@ -19,17 +22,18 @@ import xyz.jimbray.gankgank.data.HistoryBean;
  */
 public class FragmentHomePage extends FragmentBase {
 
-    private static final String KEY_HISTORY = "key_history";
+    private static final String KEY_DATA = "key_history";
 
-    private HistoryBean.History mCurData;
+    private DataBean.Data mCurData;
 
     private TextView tv_title;
+    private ImageView iv_pic;
 
-    public static Fragment newInstance(HistoryBean.History history) {
+    public static Fragment newInstance(DataBean.Data data) {
         Fragment fg = new FragmentHomePage();
 
         Bundle extras = new Bundle();
-        extras.putParcelable(KEY_HISTORY, history);
+        extras.putParcelable(KEY_DATA, data);
         fg.setArguments(extras);
 
         return fg;
@@ -38,7 +42,7 @@ public class FragmentHomePage extends FragmentBase {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mCurData = getArguments().getParcelable(KEY_HISTORY);
+        this.mCurData = getArguments().getParcelable(KEY_DATA);
     }
 
     @Nullable
@@ -57,13 +61,18 @@ public class FragmentHomePage extends FragmentBase {
         super.initViews(view);
 
         tv_title = getView(view, R.id.tv_title);
-
+        iv_pic = getView(view, R.id.iv_pic);
     }
 
     @Override
     protected void initData() {
         super.initData();
 
-        tv_title.setText(mCurData.getTitle());
+//        tv_title.setText(mCurData.getTitle());
+        if(mCurData != null) {
+            Glide.with(this)
+                    .load(mCurData.getUrl())
+                    .into(iv_pic);
+        }
     }
 }
